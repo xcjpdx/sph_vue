@@ -5,7 +5,7 @@
     <TodayRecommend></TodayRecommend>
     <Rank></Rank>
     <Like></Like>
-    <!-- 注册二个组件 -->
+    <!-- 两个Floor组件通过v-for指令生成(这样只需要写一个Floor组件，然后复用即可) -->
     <Floor v-for="floor in floorList" :key="floor.id" :floor="floor"></Floor>
     <Brand></Brand>
   </div>
@@ -19,7 +19,7 @@ import Rank from "@/pages/Home/Rank";
 import Like from "@/pages/Home/Like";
 import Floor from "@/pages/Home/Floor";
 import Brand from "@/pages/Home/Brand";
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 export default {
   name: "Home",
   // 局部组件注册
@@ -31,13 +31,12 @@ export default {
     Rank,
     TodayRecommend,
   },
-  computed:{
+  computed: {
     ...mapState({
-      floorList:state=>state.home.floorList
-    })
-  }
+      floorList: (state) => state.home.floorList,
+    }),
+  },
 };
 </script>
 
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>

@@ -6,12 +6,6 @@
         <h3 class="fl">{{ floor.name }}</h3>
         <div class="fr">
           <ul class="nav-tabs clearfix">
-            <!-- <li class="active">
-              <a href="#tab1" data-toggle="tab">热门</a>
-            </li>
-            <li>
-              <a href="#tab2" data-toggle="tab">大家电</a>
-            </li> -->
             <li
               :class="{ active: index == 0 }"
               v-for="(item, index) in floor.navList"
@@ -35,20 +29,7 @@
             </div>
             <!-- 轮播图 -->
             <div class="floorBanner">
-              <swiper :options="swiperOptions">
-                <swiper-slide v-for="el in floor.carouselList" :key="el.id">
-                  <img :src="el.imageUrl" />
-                </swiper-slide>
-                <div class="swiper-pagination" slot="pagination"></div>
-                <div
-                  class="swiper-button-next swiper-button"
-                  slot="button-next"
-                ></div>
-                <div
-                  class="swiper-button-prev swiper-button"
-                  slot="button-prev"
-                ></div>
-              </swiper>
+              <Carousel :carouselList="floor.carouselList" />
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
@@ -79,31 +60,30 @@
 </template>
 
 <script>
-import Swiper from "swiper";
 export default {
   name: "Floor",
   props: {
     //接收从Home传递过来的数据
     floor: Object,
   },
-  data() {
-    return {
-      /* swiper配置 */
-      swiperOptions: {
-        // direction: 'vertical', // 垂直切换选项
-        // 如果需要分页器
-        pagination: {
-          el: ".swiper-pagination",
-        },
-        loop: true,
-        // 如果需要前进后退按钮
-        navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
-        },
-      },
-    };
-  },
+  // data() {
+  //   return {
+  //     /* swiper配置 */
+  //     swiperOptions: {
+  //       // direction: 'vertical', // 垂直切换选项
+  //       // 如果需要分页器
+  //       pagination: {
+  //         el: ".swiper-pagination",
+  //       },
+  //       loop: true,
+  //       // 如果需要前进后退按钮
+  //       navigation: {
+  //         nextEl: ".swiper-button-next",
+  //         prevEl: ".swiper-button-prev",
+  //       },
+  //     },
+  //   };
+  // },
 };
 </script>
 

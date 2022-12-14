@@ -4,14 +4,7 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <swiper :options="swiperOptions" ref="mySwiper">
-          <swiper-slide v-for="(el) in bannerList" :key="el.id" >
-            <img :src="el.imageUrl" />
-          </swiper-slide>
-          <div class="swiper-pagination" slot="pagination"></div>
-          <div class="swiper-button-next swiper-button" slot="button-next"></div>
-          <div class="swiper-button-prev swiper-button" slot="button-prev"></div>
-        </swiper>
+        <Carousel :carouselList="bannerList" />
       </div>
       <div class="right">
         <div class="news">
@@ -87,36 +80,13 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 
 export default {
   name: "ListContainer",
-  data(){
-    return {
-      /* swiper配置 */
-      swiperOptions:{
-         // direction: 'vertical', // 垂直切换选项
-          loop: true, // 循环模式选项
-
-          // 如果需要分页器
-          pagination: {
-            el: ".swiper-pagination",
-          },
-          autoplay: {
-            //触碰后不会停止自动切换
-            disableOnInteraction: false,
-          },
-          // 如果需要前进后退按钮
-          navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          }
-      }
-    }
+  computed: {
+    ...mapState({ bannerList: (state) => state.home.bannerList }),
   },
-  computed:{
-    ...mapState({bannerList:state=>state.home.bannerList})
-  }
 };
 </script>
 
@@ -125,9 +95,16 @@ export default {
   width: 1200px;
   margin: 0 auto;
   // 轮播图前进后退按钮隐藏和显示
-  .swiper-button-next{display:none;}
-  .swiper-button-prev{display:none;}
-  .swiper-container:hover .swiper-button-next, .swiper-container:hover .swiper-button-prev{display: block; }
+  .swiper-button-next {
+    display: none;
+  }
+  .swiper-button-prev {
+    display: none;
+  }
+  .swiper-container:hover .swiper-button-next,
+  .swiper-container:hover .swiper-button-prev {
+    display: block;
+  }
   .sortList {
     height: 464px;
     padding-left: 210px;
@@ -194,7 +171,7 @@ export default {
           width: 25%;
 
           .list-item {
-            background-image: url('@/assets/image/icons.png');
+            background-image: url("@/assets/image/icons.png");
             width: 61px;
             height: 40px;
             display: block;

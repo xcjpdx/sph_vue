@@ -10,19 +10,18 @@
 // 引入非路由组件
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
-//引入swipercss
-import "swiper/css/swiper.css"
-// ajax
+//引入swiper的css样式
+import "swiper/css/swiper.css";
 export default {
   name: "App",
-  mounted(){
-    //获取三级分类
+  mounted() {
+    //获取三级分类数据
     this.$store.dispatch("getBaseCategoryList");
-    //获取路由
+    //获取轮播图数据
     this.$store.dispatch("getBannerList");
-    //获取今日推荐
+    //获取今日推荐数据
     this.$store.dispatch("getRecommend");
-    //获取Floor
+    //获取Floor数据
     this.$store.dispatch("getFloor");
   },
   components: {
@@ -32,5 +31,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>
