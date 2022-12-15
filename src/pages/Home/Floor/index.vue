@@ -66,24 +66,6 @@ export default {
     //接收从Home传递过来的数据
     floor: Object,
   },
-  // data() {
-  //   return {
-  //     /* swiper配置 */
-  //     swiperOptions: {
-  //       // direction: 'vertical', // 垂直切换选项
-  //       // 如果需要分页器
-  //       pagination: {
-  //         el: ".swiper-pagination",
-  //       },
-  //       loop: true,
-  //       // 如果需要前进后退按钮
-  //       navigation: {
-  //         nextEl: ".swiper-button-next",
-  //         prevEl: ".swiper-button-prev",
-  //       },
-  //     },
-  //   };
-  // },
 };
 </script>
 

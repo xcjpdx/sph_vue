@@ -2,79 +2,63 @@
   <!-- 商品分类导航 -->
   <div class="type-nav">
     <div class="container">
-       
       <!-- 嵌套一个外层div,这样子就可以实现全部商品分类和item中不会移出鼠标 -->
       <div @mouseleave="hideFirst" @mouseenter="showFirst">
         <h2 class="all">全部商品分类</h2>
         <transition name="slide">
-        <div class="sort" v-show="isShowFirst">
-          <!-- 利用事件委派跳转路由 -->
-          <div class="all-sort-list2" @click="toSearch">
-            <div
-              class="item"
-              v-for="(c1, index) in baseCategoryList"
-              :key="c1.categoryId"
-              :class="{ active: currentIndex == index }"
-              @mouseenter="showCurrentItem(index)"
-            >
-              <!-- 一级 -->
-              <h3>
-                <!-- <a href="">{{c1.categoryName}}</a> -->
-                <!-- 声明式导航  过多的组件产生 -->
-                <!-- <router-link :to="`/search?categoryName=${c1.categoryName}&category1Id=${c1.categoryId}`">{{c1.categoryName}}</router-link> -->
-                <!-- 编程式导航 非委派-->
-                <!-- <a href="javascript:;" @click="$router.push(`/search?categoryName=${c1.categoryName}&category1Id=${c1.categoryId}`)">{{ c1.categoryName }}</a> -->
-                <a
-                  href="javascript:;"
-                  :data-categoryname="c1.categoryName"
-                  :data-category1Id="c1.categoryId"
-                  >{{ c1.categoryName }}</a
-                >
-              </h3>
-              <div class="item-list clearfix">
-                <div class="subitem">
-                  <dl
-                    class="fore"
-                    v-for="c2 in c1.categoryChild"
-                    :key="c2.categoryId"
+          <div class="sort" v-show="isShowFirst">
+            <!-- 利用事件委派跳转路由 -->
+            <div class="all-sort-list2" @click="toSearch">
+              <div
+                class="item"
+                v-for="(c1, index) in baseCategoryList"
+                :key="c1.categoryId"
+                :class="{ active: currentIndex == index }"
+                @mouseenter="showCurrentItem(index)"
+              >
+                <!-- 一级 -->
+                <h3>
+                  <a
+                    href="javascript:;"
+                    :data-categoryname="c1.categoryName"
+                    :data-category1Id="c1.categoryId"
+                    >{{ c1.categoryName }}</a
                   >
-                    <!-- 二级 -->
-                    <dt>
-                      <!-- <a href="">{{c2.categoryName}}</a> -->
-                      <!-- 声明式导航  过多的组件产生 -->
-                      <!-- <router-link :to="`/search?categoryName=${c2.categoryName}&category2Id=${c2.categoryId}`">{{c2.categoryName}}</router-link> -->
-                      <!-- 编程式导航 非委派-->
-                      <!-- <a href="javascript:;" @click="$router.push(`/search?categoryName=${c2.categoryName}&category2Id=${c2.categoryId}`)">{{ c2.categoryName }}</a> -->
-                      <a
-                        href="javascript:;"
-                        :data-categoryname="c2.categoryName"
-                        :data-category2Id="c2.categoryId"
-                        >{{ c2.categoryName }}</a
-                      >
-                    </dt>
-                    <dd>
-                      <!-- 三级 -->
-                      <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
-                        <!-- <a href="">{{c3.categoryName}}</a> -->
-                        <!-- 声明式导航  过多的组件产生-->
-                        <!-- <router-link :to="`/search?categoryName=${c3.categoryName}&category3Id=${c3.categoryId}`">{{c3.categoryName}}</router-link> -->
-                        <!-- 编程式导航 非委派-->
-                        <!-- <a href="javascript:;" @click="$router.push(`/search?categoryName=${c3.categoryName}&category3Id=${c3.categoryId}`)">{{ c3.categoryName }}</a> -->
+                </h3>
+                <div class="item-list clearfix">
+                  <div class="subitem">
+                    <dl
+                      class="fore"
+                      v-for="c2 in c1.categoryChild"
+                      :key="c2.categoryId"
+                    >
+                      <!-- 二级 -->
+                      <dt>
                         <a
                           href="javascript:;"
-                          :data-categoryname="c3.categoryName"
-                          :data-category3Id="c3.categoryId"
-                          >{{ c3.categoryName }}</a
+                          :data-categoryname="c2.categoryName"
+                          :data-category2Id="c2.categoryId"
+                          >{{ c2.categoryName }}</a
                         >
-                      </em>
-                    </dd>
-                  </dl>
+                      </dt>
+                      <dd>
+                        <!-- 三级 -->
+                        <em v-for="c3 in c2.categoryChild" :key="c3.categoryId">
+                          <a
+                            href="javascript:;"
+                            :data-categoryname="c3.categoryName"
+                            :data-category3Id="c3.categoryId"
+                            >{{ c3.categoryName }}</a
+                          >
+                        </em>
+                      </dd>
+                    </dl>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-         </transition>
+        </transition>
       </div>
       <nav class="nav">
         <a href="###">服装城</a>
@@ -92,6 +76,7 @@
 
 <script>
 import { mapState } from "vuex";
+//节流
 import throttle from "lodash/throttle";
 export default {
   name: "Nav",
@@ -100,25 +85,21 @@ export default {
       //当前显示的分类栏
       currentIndex: -2,
       //控制一级分类栏是否显示
-      isShowFirst:this.$route.path==="/"
+      isShowFirst: this.$route.path === "/",
     };
   },
   computed: {
-    //获取三级分类 方法1
-    // baseCategoryList(){
-    //   return this.$store.state.home.baseCategoryList;
-    // }
-    //获取三级分类 方法2
-    // 映射数据
+    //获取三级分类列表数据
     ...mapState({
       baseCategoryList: (state) => state.home.baseCategoryList,
     }),
   },
   methods: {
-    /* 跳转搜索 */
+    /* 跳转到搜索路由 */
     toSearch(event) {
       //利用data自定义属性
-      let { categoryname, category1id, category2id, category3id } = event.target.dataset; //解构赋值
+      let { categoryname, category1id, category2id, category3id } =
+        event.target.dataset; //解构赋值
       let query = {};
       //放入查询值
       if (categoryname) {
@@ -132,41 +113,41 @@ export default {
       } else if (category3id) {
         query.category3Id = category3id;
       }
-      let opts={
+      let opts = {
         name: "search",
         query,
-        params:this.$route.params
+        params: this.$route.params,
       };
-      //跳转
-      if(this.$route.name=="search"){
-          this.$router.replace(opts);
-        }
+      //路由跳转
+      if (this.$route.name == "search") {
+        this.$router.replace(opts);
+      }
       this.$router.push(opts);
       //隐藏
       this.hideFirst();
     },
 
     /* 显示当前指向的分类列表  */
-    // 使用节流,隔一段时间就调用,注意不能使用箭头函数
-    showCurrentItem:throttle(function(index){
-      if(this.currentIndex!=-2){
-        this.currentIndex=index;
+    // 使用节流,隔一段时间才调用,注意不能使用箭头函数
+    showCurrentItem: throttle(function (index) {
+      if (this.currentIndex != -2) {
+        this.currentIndex = index;
       }
-    },200),
-    
+    }, 100),
+
     /* 鼠标进入,显示一级分类 */
-    showFirst(){
-      this.currentIndex=-1;
-      this.isShowFirst=true;
+    showFirst() {
+      this.currentIndex = -1;
+      this.isShowFirst = true;
     },
-    
+
     /* 鼠标移出去,隐藏一级分类 */
-    hideFirst(){
-      if(this.$route.path!=="/"){
-        this.isShowFirst=false;
+    hideFirst() {
+      if (this.$route.path !== "/") {
+        this.isShowFirst = false;
       }
-        this.currentIndex=-2; 
-    }
+      this.currentIndex = -2;
+    },
   },
 };
 </script>
@@ -214,13 +195,13 @@ export default {
       z-index: 999;
 
       &.slide-enter,
-      &.slide-leave-to{
+      &.slide-leave-to {
         opacity: 0;
         height: 0;
       }
       &.slide-enter-active,
-      &.slide-leave-active{
-        transition: all .3s;
+      &.slide-leave-active {
+        transition: all 0.3s;
       }
 
       .all-sort-list2 {
