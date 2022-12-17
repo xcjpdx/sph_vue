@@ -7,14 +7,14 @@
           <p>尚品汇欢迎您！</p>
           <!-- 已登录状态 -->
           <p v-if="$store.state.user.userInfo.name">
-            <!-- <a href="###">登录</a> -->
-            <a href="javascript:;">{{$store.state.user.userInfo.name}}</a>
-            <a href="javascript:;" @click="loginOut" style="margin-left:10px">退出登录</a>
+            <a href="javascript:;">{{ $store.state.user.userInfo.name }}</a>
+            <a href="javascript:;" @click="loginOut" style="margin-left: 10px"
+              >退出登录</a
+            >
           </p>
           <!-- 未登录 -->
           <p v-else>
             <span>请</span>
-            <!-- <a href="###">登录</a> -->
             <router-link to="/login">登录</router-link>
             <router-link to="/register" class="register">免费注册</router-link>
           </p>
@@ -68,50 +68,52 @@ export default {
       searchKeyWord: "",
     };
   },
-  mounted(){
-    this.$bus.$on("clearSearch",this.clearSearch);
+  mounted() {
+    //监听自定义事件
+    this.$bus.$on("clearSearch", this.clearSearch);
   },
-  destroyed(){
-    //解绑
+  destroyed() {
+    //解绑自定义事件
     this.$bus.$off("clearSearch");
   },
   methods: {
     /* 退出登录 */
-    async loginOut(){
+    async loginOut() {
       try {
         await this.$store.dispatch("setLoginOut");
         this.$message.success("退出登录成功!");
         //回到主页
         this.$router.push("/");
       } catch (error) {
-        this.$message.error("退出失败!"+error);
+        this.$message.error("退出失败!" + error);
       }
     },
     /* 清空搜索框 */
-    clearSearch(){
-      this.searchKeyWord="";
+    clearSearch() {
+      this.searchKeyWord = "";
     },
     /* 提交搜索 */
     toSearch() {
       let { searchKeyWord } = this;
+      //trim() 函数移除字符串两侧的空白字符,函数执行成功后返回删除了字符串首部和尾部空格的字符串
       if (searchKeyWord.trim()) {
-        //如果当前头部所在组件为search
-        let opts={
-           name: "search",
-          params:{
-            keyword:searchKeyWord
+        let opts = {
+          name: "search",
+          params: {
+            keyword: searchKeyWord,
           },
           //如果当前对象有query参数就传入
-          query:this.$route.query
+          query: this.$route.query,
         };
-        if(this.$route.name=="search"){
+        //如果当前头部所在组件为search
+        if (this.$route.name == "search") {
           this.$router.replace(opts);
         }
         this.$router.push(opts);
         //清空输入内容
-        this.searchKeyWord="";
+        // this.searchKeyWord = "";
       } else {
-        this.$message.warning("请输入完整的内容!");
+        this.$message.warning("请输入您想搜索的商品信息!");
       }
     },
   },

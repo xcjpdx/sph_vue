@@ -1,56 +1,61 @@
 <template>
   <div class="clearfix selector">
+    <!-- 第一行：品牌列表 -->
     <div class="type-wrap logo">
       <div class="fl key brand">品牌</div>
       <div class="value logos">
         <ul class="logo-list">
-          <li v-for="brand in trademarkList" :key="brand.tmId" @click="setTrademark(`${brand.tmId}:${brand.tmName}`)">
-              {{brand.tmName}}
-           </li>
+          <li
+            v-for="brand in trademarkList"
+            :key="brand.tmId"
+            @click="setTrademark(`${brand.tmId}:${brand.tmName}`)"
+          >
+            {{ brand.tmName }}
+          </li>
         </ul>
       </div>
-      <!-- <div class="ext">
-        <a href="javascript:void(0);" class="sui-btn">多选</a>
-        <a href="javascript:void(0);">更多</a>
-      </div> -->
     </div>
+    <!-- 后面的所有行：属性列表 -->
     <div class="type-wrap" v-for="attr in attrsList" :key="attr.attrId">
-      <div class="fl key">{{attr.attrName}}</div>
+      <div class="fl key">{{ attr.attrName }}</div>
       <div class="fl value">
-        <ul class="type-list" @click="addPropsItem($event,attr.attrId,attr.attrName)">
-            <li v-for="(item,index) in attr.attrValueList" :key="index"  >
-                {{item}}
-            </li>
+        <ul
+          class="type-list"
+          @click="addPropsItem($event, attr.attrId, attr.attrName)"
+        >
+          <li v-for="(item, index) in attr.attrValueList" :key="index">
+            {{ item }}
+          </li>
         </ul>
       </div>
-      <div class="fl ext"></div>
     </div>
- 
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   name: "",
-  computed:{
-      //获取属性值
-      ...mapGetters(["trademarkList","attrsList"])
+  computed: {
+    //获取属性值
+    ...mapGetters(["trademarkList", "attrsList"]),
   },
   //子向父传递数据
-  props:{
-    setTrademark:Function,
-    setOptionProps:Function
+  props: {
+    setTrademark: Function,
+    setOptionProps: Function,
   },
-  methods:{
-    addPropsItem(event,attrId,attrName){
+  methods: {
+    addPropsItem(event, attrId, attrName) {
       //单击的为li标签
-      if(event.target.nodeName.toUpperCase()=="LI"){
+      if (event.target.nodeName.toUpperCase() == "LI") {
         // console.log(`${attrId}:${event.target.textContent}:${attrName}`);
-        this.setOptionProps(`${attrId}:${event.target.textContent}:${attrName}`);
+        this.setOptionProps(
+          `${attrId}:${event.target.textContent}:${attrName}`
+        );
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

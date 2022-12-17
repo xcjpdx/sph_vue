@@ -2,11 +2,9 @@
   <div>
     <!-- 导航栏 -->
     <Nav></Nav>
-    <!-- <h1>用户搜索的值:{{this.$route.path}}</h1> -->
-    <!--list-content-->
     <div class="main">
       <div class="py-container">
-        <!--bread-->
+        <!-- 面包屑 -->
         <div class="bread">
           <ul class="fl sui-breadcrumb">
             <li>
@@ -40,6 +38,7 @@
         ></SearchSelector>
         <!--details-->
         <div class="details clearfix">
+          <!-- 排序方式 -->
           <div class="sui-navbar">
             <div class="navbar-inner filter">
               <ul class="sui-nav">
@@ -53,38 +52,8 @@
                     ></i>
                   </a>
                 </li>
-                <li :class="{ active: orderInfo[0] === '3' }">
-                  <a href="javascript:;">
-                    销量
-                    <i
-                      v-show="orderInfo[0] === '3'"
-                      class="iconfont"
-                      :class="orderInfo[1] === 'desc' ? 'icon-down' : 'icon-up'"
-                    ></i>
-                  </a>
-                </li>
-                <li :class="{ active: orderInfo[0] === '4' }">
-                  <a href="javascript:;">
-                    新品
-                    <i
-                      v-show="orderInfo[0] === '4'"
-                      class="iconfont"
-                      :class="orderInfo[1] === 'desc' ? 'icon-down' : 'icon-up'"
-                    ></i>
-                  </a>
-                </li>
-                    <li :class="{ active: orderInfo[0] === '5' }">
-                  <a href="javascript:;">
-                    评价
-                    <i
-                      v-show="orderInfo[0] === '5'"
-                      class="iconfont"
-                      :class="orderInfo[1] === 'desc' ? 'icon-down' : 'icon-up'"
-                    ></i>
-                  </a>
-                </li>
                 <li :class="{ active: orderInfo[0] === '2' }">
-                  <a href="javascript:;"  @click="orderProduct('2')">
+                  <a href="javascript:;" @click="orderProduct('2')">
                     价格
                     <i
                       v-show="orderInfo[0] === '2'"
@@ -100,10 +69,15 @@
           <div class="goods-list">
             <!-- 事件委派方式添加进购物车 -->
             <ul class="yui3-g" @click="addCart($event)">
-              <li class="yui3-u-1-5" v-for="item in goodsList" :key="item.id" :data-id="item.id">
+              <li
+                class="yui3-u-1-5"
+                v-for="item in goodsList"
+                :key="item.id"
+                :data-id="item.id"
+              >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <router-link :to="'/detail/'+item.id">
+                    <router-link :to="'/detail/' + item.id">
                       <!-- 懒加载模式 -->
                       <img v-lazy="item.defaultImg" />
                     </router-link>
@@ -115,10 +89,15 @@
                     </strong>
                   </div>
                   <div class="attr">
-                    <router-link :to="'/detail/'+item.id">{{item.title}}</router-link>
+                    <router-link :to="'/detail/' + item.id">{{
+                      item.title
+                    }}</router-link>
                   </div>
                   <div class="commit">
-                    <i class="command">已有<span>{{getRandomIntInclusive(587,2540)}}</span>人评价</i>
+                    <i class="command"
+                      >已有<span>{{ getRandomIntInclusive(587, 2540) }}</span
+                      >人评价</i
+                    >
                   </div>
                   <div class="operate">
                     <a
@@ -136,15 +115,17 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <MyPagination 
-          :currentPage="options.pageNo"
-          :total="totalPage"
-          :showPageNo="5"
-          :pageSize="options.pageSize"
-          @currentPage="getShopList"
-          />
+          <center>
+            <MyPagination
+              :currentPage="options.pageNo"
+              :total="totalPage"
+              :showPageNo="5"
+              :pageSize="options.pageSize"
+              @currentPage="getShopList"
+            />
+          </center>
         </div>
-        <!--hotsale-->
+        <!--hotsale (死数据)-->
         <div class="clearfix hot-sale">
           <h4 class="title">热卖商品</h4>
           <div class="hot-list">
@@ -254,19 +235,14 @@ export default {
         trademark: "", //品牌: "ID:品牌名称"示例: "1:苹果
         order: "1:desc", //排序 排序方式 1: 综合,2: 价格 asc: 升序,desc: 降序  示例: "1:desc"
         pageNo: 1, //页码
-        pageSize: 10, //每页数量
+        pageSize: 5, //每页数量
       },
     };
   },
   watch: {
     //监视路由参数的变化
-    // $route(toParams,fromParams){
-    //   //发生变化,重写并查询
-    //    this.updateParams();
-    //    this.getShopList();
-    // }
     $route: {
-      handler(toParams, fromParams) {
+      handler() {
         //发生变化,重写并查询
         this.updateParams();
         this.getShopList();
@@ -276,76 +252,52 @@ export default {
   },
   methods: {
     //添加到购物车
-      async addCart(event){
-      //不为加入购物车按钮
-      if(!!!event.target.dataset.add){
+    async addCart(event) {
+      //如果点击的不是加入购物车按钮
+      if (!event.target.dataset.add) {
         return;
       }
       //加入购物车操作
       let nodeLi = event.target.parentElement?.parentElement?.parentElement;
-      if(nodeLi){
+      if (nodeLi) {
         //存在值才操作
-        let skuId = nodeLi.dataset.id;//获取商品id
-        let skuNum = 1;//商品数量默认为1
-        let skuName = nodeLi.querySelector(".attr>a")?.textContent;//商品的名字
+        let skuId = nodeLi.dataset.id; //获取商品id
+        let skuNum = 1; //商品数量默认为1
+        let skuName = nodeLi.querySelector(".attr>a")?.textContent; //商品的名字
         let skuDefaultImg = nodeLi.querySelector(".p-img img")?.src;
-         //由于是async所以返回的是promise
-          try{
-            let result = await this.$store.dispatch("getAddOrUpdateCart",{skuId,skuNum});
-            if(result=="OK"){
-              this.$message.success({
-                message:"添加购物车成功",
-                duration:1000
-              })
-              //跳转
-              this.$router.push({
-                name:"addcartsuccess",
-                query:{
-                  skuNum,
-                }
-              });
-              //复杂数据(商品信息)存入sessionStorage - 便于添加购物车成功页面读取
-              sessionStorage.setItem("SKUINFO_KEY",JSON.stringify({
+        //由于是async所以返回的是promise
+        try {
+          let result = await this.$store.dispatch("getAddOrUpdateCart", {
+            skuId,
+            skuNum,
+          });
+          if (result == "OK") {
+            this.$message.success({
+              message: "添加购物车成功",
+              duration: 1000,
+            });
+            //跳转
+            this.$router.push({
+              name: "addcartsuccess",
+              query: {
+                skuNum,
+              },
+            });
+            //复杂数据(商品信息)存入sessionStorage - 便于添加购物车成功页面读取
+            sessionStorage.setItem(
+              "SKUINFO_KEY",
+              JSON.stringify({
                 skuDefaultImg,
                 skuName,
-                id:skuId,
-              }));
-            }
-          }catch(error){
-            this.$message.error("添加购物车失败"+error.message);
+                id: skuId,
+              })
+            );
           }
+        } catch (error) {
+          this.$message.error("添加购物车失败" + error.message);
+        }
       }
-      // let skuNum = 1//商品数量
-      // let skuId = event.target.dataset.id;//商品id
-      // console.log(event.target);
-      // console.log(skuId);
-      // if(!skuId){
-      //   return;
-      // }
-      //由于是async所以返回的是promise
-      // try{
-      //   let result = await this.$store.dispatch("getAddOrUpdateCart",{skuId,skuNum:1});
-      //   if(result=="OK"){
-      //     alert("添加购物车成功,开始跳转...");
-      //     //跳转
-      //     this.$router.push({
-      //       name:"addcartsuccess",
-      //       query:{
-      //         skuNum:this.skuNum
-      //       }
-      //     });
-      //     //复杂数据存入sessionStorage
-      //     sessionStorage.setItem("SKUINFO_KEY",JSON.stringify(this.skuInfo));
-      //   }
-      // }catch(error){
-      //   alert("添加购物车失败",error.message);
-      // }
     },
-    /* 分页器页码发生变化的回调 */
-    // currentChange(newPage){
-    //   this.options.pageNo=newPage;
-    //   this.getShopList();
-    // },
     /* 随机数生成 取闭区间[x,y]范围内的数 */
     getRandomIntInclusive(min, max) {
       min = Math.ceil(min);
@@ -353,17 +305,17 @@ export default {
       return Math.floor(Math.random() * (max - min + 1) + min);
     },
     /* 排序 flage为1或者2*/
-    orderProduct(flagAfter){
+    orderProduct(flagAfter) {
       //降序升序切换
-      let [flagBefore,type]=this.orderInfo;
-      if(flagBefore===flagAfter){
+      let [flagBefore, type] = this.orderInfo;
+      if (flagBefore === flagAfter) {
         //切换排序方式
-        type=type==='desc'?'asc':'desc';
-      }else{
+        type = type === "desc" ? "asc" : "desc";
+      } else {
         //一个新的类型
-        type='desc';
+        type = "desc";
       }
-      this.options.order=flagAfter+":"+type;
+      this.options.order = flagAfter + ":" + type;
       //发送请求来更新
       this.getShopList();
     },
@@ -379,23 +331,18 @@ export default {
         this.options.props.push(value);
         //发送请求来更新
         this.getShopList();
-        // console.log(this.options.props);
       }
     },
     /* 移除品牌 */
     removeTrademark() {
-      //为了及时更新,这里就不用这种了
-      // this.options.trademark = "";
-      this.$delete(this.options,"trademark");
+      this.$delete(this.options, "trademark");
       this.getShopList();
     },
-    /* 更改品牌 trademark */
+    /* 更改品牌 */
     setTrademark(trademark) {
       //如果是相同的,就不重新发送ajax请求
       if (this.options.trademark != trademark) {
-        //为了及时更新,这里就不用这种了
-        // this.options.trademark = trademark;
-        this.$set(this.options,"trademark",trademark);
+        this.$set(this.options, "trademark", trademark);
         //重写发送ajax请求
         this.getShopList();
       }
@@ -406,9 +353,8 @@ export default {
       this.options.category2Id = "";
       this.options.category3Id = "";
       this.options.categoryName = "";
-      //重发请求
-      // this.getShopList();
-      // 通过push  或者 router来更改,这样子地址栏就可以跟着删除了
+      // 重发请求
+      // 通过router来发起路由跳转来更改,这样子地址栏就可以跟着删除了
       this.$router.replace({
         name: "search",
         params: this.$route.params,
@@ -418,7 +364,6 @@ export default {
     removeKeyword() {
       this.options.keyword = "";
       //重发请求
-      // this.getShopList();
       //当删除了搜索关键字的时候,搜索框内容也应该被清除
       this.$router.replace({
         name: "search",
@@ -443,24 +388,15 @@ export default {
         categoryName,
       };
     },
-    /* 发送更新后的查询ajax请求 */
-    getShopList(newPage=1) {
-      this.options.pageNo=newPage;
-      // this.getShopList();
+    /* 发送更新后的查询ajax请求(点击了翻页器后重新获取商品数据) */
+    getShopList(newPage = 1) {
+      this.options.pageNo = newPage;
       //发送ajax请求
       this.$store.dispatch("reqSearch", this.options);
     },
   },
   computed: {
-    // 为了避免undefined.xxx 出现报错,这里做处理 ,所以mapGetters可以对state数据做处理后返回
-    // ...mapState({
-    //   goodList:state=>state.search.productList.goodsList
-    // })
-    ...mapGetters(["goodsList","totalPage"]),
-    // 相当于
-    // goodsList(){
-    //   return this.$store.goodsList
-    // }
+    ...mapGetters(["goodsList", "totalPage"]),
     /* 返回分割排序方式后的数组 [0]代表序号 [1]代表排序方式 */
     orderInfo() {
       return this.options.order.split(":");
