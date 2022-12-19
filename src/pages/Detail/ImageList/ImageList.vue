@@ -2,22 +2,20 @@
   <div>
     <!--banner轮播-->
     <swiper :options="swiperOptions">
-      <swiper-slide v-for="(skuImage,index) in skuImageList" :key="skuImage.id">
-        <img :src="skuImage.imgUrl" :class="{active:defaultIndex==index}" @click="changeDefaultImg(index)"/>
+      <swiper-slide
+        v-for="(skuImage, index) in skuImageList"
+        :key="skuImage.id"
+      >
+        <img
+          :src="skuImage.imgUrl"
+          :class="{ active: defaultIndex == index }"
+          @click="changeDefaultImg(index)"
+        />
       </swiper-slide>
       <div class="swiper-button-next swiper-button" slot="button-next"></div>
       <div class="swiper-button-prev swiper-button" slot="button-prev"></div>
     </swiper>
   </div>
-  <!-- <div class="swiper-container">
-    <div class="swiper-wrapper">
-      <div class="swiper-slide">
-        <img src="../images/s1.png">
-      </div>
-    </div>
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-  </div> -->
 </template>
 
 <script>
@@ -27,20 +25,11 @@ export default {
   data() {
     return {
       /* 默认选中的图片 */
-      defaultIndex:0,
+      defaultIndex: 0,
       /* swiper配置 */
       swiperOptions: {
-        // direction: 'vertical', // 垂直切换选项
-        // 如果需要分页器
-        // pagination: {
-        //   el: ".swiper-pagination",
-        // },
-        // autoplay: {
-        //   //触碰后不会停止自动切换
-        //   disableOnInteraction: false,
-        // },
-        slidesPerView:6,
-        slidesPerGroup:6,
+        slidesPerView: 4,
+        slidesPerGroup: 2,
         // 如果需要前进后退按钮
         navigation: {
           nextEl: ".swiper-button-next",
@@ -49,17 +38,17 @@ export default {
       },
     };
   },
-  methods:{
+  methods: {
     //改变默认图片的索引
-    changeDefaultImg(newIndex){
+    changeDefaultImg(newIndex) {
       //相等,则不改变,不等于则改变
-      if(newIndex!=this.defaultIndex){
-        this.defaultIndex=newIndex;
+      if (newIndex != this.defaultIndex) {
+        this.defaultIndex = newIndex;
         //改变Zoom当中的图片
-        this.$bus.$emit("changeDefaultIndex",newIndex);
+        this.$bus.$emit("changeDefaultIndex", newIndex);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

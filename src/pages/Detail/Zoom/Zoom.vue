@@ -16,7 +16,6 @@
 import throttle from "lodash/throttle";
 export default {
   name: "Zoom",
-  //为了避免接收到假报错,应该对接收到的数据进行再一次处理
   props: ["skuImageList"],
   data() {
     return {
