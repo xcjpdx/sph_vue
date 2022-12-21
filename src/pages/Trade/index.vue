@@ -159,16 +159,16 @@
 </template>
 
 <script>
-import AddressInfoModel from "@/pages/AddressModel";
+import AddressInfoModel from "@/pages/AddressInfoModel";
 import { mapGetters, mapState } from "vuex";
 export default {
   name: "Trade",
   components: { AddressInfoModel },
   data() {
     return {
-      // 用户留言
+      // 用户|买家留言
       userWant: "",
-      //地址信息对话框显示和隐藏
+      //地址信息的对话框的显示和隐藏
       controlAddressShow: false,
     };
   },
@@ -188,12 +188,11 @@ export default {
   methods: {
     // 删除地址
     async removeUserAddress(id) {
-      // 数据库移除
+      // 数据库|服务器 移除数据
       let result = await this.$API.reqRemoveUserAddress(id);
       if (result.code == 200) {
         //删除地址成功
         this.$message.success("删除地址成功!");
-        //刷新界面 后面愿意优化的话可以把获取地址信息和商品信息分离开
         this.sendTradeInfo();
       } else {
         this.$message.error(result.message);
@@ -203,18 +202,22 @@ export default {
     // 修改地址
     updateUserAddress(index) {
       //获取地址信息
-      console.log("用户单击修改地址信息");
       let addInfo = this.userAddressList[index];
-      console.log("输出根据索引找到的地址信息", addInfo);
       this.$store.state.trade.changAddress = addInfo;
       //显示弹窗
       this.controlAddressShow = true;
+    },
+    // 改变默认地址
+    changeDefault(userAddress, userAddressList) {
+      //排他思想
+      userAddressList.forEach((item) => (item.isDefault = "0")); //其他设置为未选中
+      userAddress.isDefault = "1"; //设置为默认地址
     },
     // 地址弹出框用户单击确定
     clickConfirm() {
       //隐藏弹窗
       this.controlAddressShow = false;
-      //刷新界面 后面愿意优化的话可以把获取地址信息和商品信息分离开
+      //刷新界面
       this.sendTradeInfo();
     },
     // 添加地址
@@ -261,12 +264,6 @@ export default {
         this.$message.warning(error);
         console.log(error);
       }
-    },
-    // 改变默认地址
-    changeDefault(userAddress, userAddressList) {
-      //传入引用数据类型,然后
-      userAddressList.forEach((item) => (item.isDefault = "0")); //其他设置为未选中
-      userAddress.isDefault = "1"; //设置为默认地址
     },
     //获取信息
     sendTradeInfo() {

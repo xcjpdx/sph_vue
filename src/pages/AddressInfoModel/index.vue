@@ -1,13 +1,12 @@
 <template>
-
   <div class="addressmodel-wrap" v-show="controlAddressShow">
     <el-dialog
-      :title="changAddressInfo.id?'请修改您的地址信息':'请添写您的收货地址'"
-      :visible.sync="controlAddressShow"
+      :title="changAddressInfo.id ? '请修改您的地址信息' : '请添写您的收货地址'"
+      :visible.sync="ControlAddressShow"
       center
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      :show-close	= "false"
+      :show-close="false"
       :modal="false"
       @open="handleOpen"
     >
@@ -66,10 +65,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <!-- @click="dialogFormVisible = false" -->
         <el-button @click="btnConfirm" type="primary">确 定</el-button>
         <el-button @click="btnCancel">取 消</el-button>
-        <!-- @click="dialogFormVisible = false" -->
       </div>
     </el-dialog>
   </div>
@@ -86,13 +83,13 @@ export default {
         consignee: "",
         //联系电话
         phoneNum: "",
-        // 是否设置默认地址
+        //是否设置默认地址
         isDefault: false,
         //区域id
         regionId: "",
-        //省份
+        //省份id
         provinceId: "",
-        //详细地址
+        //用户详细地址
         userAddress: "",
       },
       //文本提示的长度
@@ -108,13 +105,17 @@ export default {
     clickConfirm: Function,
   },
   computed: {
-    // 如果是修改地址,则该项会有值
+    // 如果修改了地址,则该项会有值
     ...mapState({
       changAddressInfo: (state) => state.trade.changAddress,
     }),
     // 区域id
     regionId() {
       return this.addressInfo.regionId;
+    },
+    //因为不推荐修改父组件传递过来的props，所以将其另存一份
+    ControlAddressShow() {
+      return this.controlAddressShow;
     },
   },
   mounted() {
@@ -123,7 +124,7 @@ export default {
   },
   methods: {
     //阻止默认行为-滚动条的
-    preventDefault(e){
+    preventDefault(e) {
       e.preventDefault();
     },
     //阻止默认行为-滚动条的
@@ -135,44 +136,66 @@ export default {
       }
     },
     //禁用滚动条
-    forbiddenScroll(){
+    forbiddenScroll() {
       let supportsPassive = false;
-        try {
-          window.addEventListener("test", null, Object.defineProperty({}, "passive", {
-              get: function () {
-                supportsPassive = true;
-              },
-            })
-          );
-        } catch (e) {}
-        let wheelOpt = supportsPassive ? { passive: false } : false;
-        let wheelEvent = "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
-        window.addEventListener("DOMMouseScroll", this.preventDefault, false); // older FF
-        window.addEventListener(wheelEvent, this.preventDefault, wheelOpt); // modern desktop
-        window.addEventListener("touchmove", this.preventDefault, wheelOpt); // mobile
-        window.addEventListener("keydown", this.preventDefaultForScrollKeys, false);
+      try {
+        window.addEventListener(
+          "test",
+          null,
+          Object.defineProperty({}, "passive", {
+            get: function () {
+              supportsPassive = true;
+              return "";
+            },
+          })
+        );
+      } catch (e) {
+        console.log("失败");
+      }
+      let wheelOpt = supportsPassive ? { passive: false } : false;
+      let wheelEvent =
+        "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
+      window.addEventListener("DOMMouseScroll", this.preventDefault, false); // older FF
+      window.addEventListener(wheelEvent, this.preventDefault, wheelOpt); // modern desktop
+      window.addEventListener("touchmove", this.preventDefault, wheelOpt); // mobile
+      window.addEventListener(
+        "keydown",
+        this.preventDefaultForScrollKeys,
+        false
+      );
     },
     //启用滚动条
-    enableScroll(){
-        let supportsPassive = false;
-        try {
-          window.addEventListener("test", null, Object.defineProperty({}, "passive", {
-              get: function () {
-                supportsPassive = true;
-              },
-            })
-          );
-        } catch (e) {}
-        let wheelOpt = supportsPassive ? { passive: false } : false;
-        let wheelEvent = "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
-        // call this to Enable
-        window.removeEventListener("DOMMouseScroll", this.preventDefault, false);
-        window.removeEventListener(wheelEvent, this.preventDefault, wheelOpt);
-        window.removeEventListener("touchmove", this.preventDefault, wheelOpt);
-        window.removeEventListener("keydown", this.preventDefaultForScrollKeys, false);
+    enableScroll() {
+      let supportsPassive = false;
+      try {
+        window.addEventListener(
+          "test",
+          null,
+          Object.defineProperty({}, "passive", {
+            get: function () {
+              supportsPassive = true;
+              return "";
+            },
+          })
+        );
+      } catch (e) {
+        console.log("失败");
+      }
+      let wheelOpt = supportsPassive ? { passive: false } : false;
+      let wheelEvent =
+        "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
+      // call this to Enable
+      window.removeEventListener("DOMMouseScroll", this.preventDefault, false);
+      window.removeEventListener(wheelEvent, this.preventDefault, wheelOpt);
+      window.removeEventListener("touchmove", this.preventDefault, wheelOpt);
+      window.removeEventListener(
+        "keydown",
+        this.preventDefaultForScrollKeys,
+        false
+      );
     },
     //处理dialog打开
-    handleOpen(){
+    handleOpen() {
       //禁用滚动条
       this.forbiddenScroll();
     },
@@ -186,7 +209,7 @@ export default {
     //确认按钮
     async btnConfirm() {
       if (this.changAddressInfo.id) {
-        //存在,说明是修改地址信息
+        //存在,说明是修改了地址信息
         this.updateAddress();
       } else {
         //说明是添加地址
@@ -208,13 +231,12 @@ export default {
           this.$message.success("添加地址信息成功!");
         } else {
           this.$message.warning("添加地址失败");
-          console.log(result);
         }
       } catch (error) {
         this.$message.warning("请填写完整的值!");
       }
     },
-    //修改地址
+    //修改地址信息
     async updateAddress() {
       this.addressInfo.isDefault = this.addressInfo.isDefault ? "1" : "0"; //是否勾选默认地址,勾选了则为1,没有则为0;
       let sendInfo = {
@@ -227,27 +249,24 @@ export default {
         this.$message.success("修改地址信息成功!");
       } else {
         this.$message.success("修改失败!");
-        console.log(result);
       }
     },
-    //获取区域地址对应省份信息
+    //获取区域对应的省份信息
     async reqAddressBaseProvinceByRegionId(regionId) {
       let result = await this.$API.reqAddressBaseProvinceByRegionId(regionId);
       if (result.code == 200) {
         this.provinces = result.data;
       } else {
-        //  alert("获取地址省份信息失败,",result.message)
         this.$message.error("获取地址省份信息失败");
       }
     },
-    //获取区域地址
+    //获取区域信息
     async getAddressInfo() {
       let result = await this.$API.reqAddressBaseRegion();
       if (result.code == 200) {
         this.regions = result.data;
       } else {
         this.$message.error("获取地址区域信息失败!" + result.message);
-        //   alert("获取地址区域信息失败,",result.message)
       }
     },
   },
@@ -279,9 +298,11 @@ export default {
       if (!this.regionId) return; //防止没有加载完成
       //清空省份地址信息
       this.provinces = [];
-      //清除选择的省份
-      // this.addressInfo.provinceId = "";
-      //重新发送获取省份地址的
+      //清除选择的省份(先判断：如果修改了区域，才将省份清空|若没有修改区域，则不需要清空省份)
+      if (this.addressInfo.regionId != this.changAddressInfo.regionId) {
+        this.addressInfo.provinceId = "";
+      }
+      //重新发送获取省份信息
       this.reqAddressBaseProvinceByRegionId(this.regionId);
     },
   },
@@ -291,13 +312,13 @@ export default {
 <style lang="less" scoped>
 .addressmodel-wrap {
   // 模态框,element-ui的在这里有点bug
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,.3);
-  .el-dialog__wrapper{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  .el-dialog__wrapper {
     width: 100%;
     height: 100%;
   }
