@@ -2,6 +2,7 @@
   <div>
     <div class="trade-container">
       <h3 class="title">填写并核对订单信息</h3>
+      <!-- 主题内容区域 -->
       <div class="content">
         <h5 class="receive">
           收件人信息
@@ -82,7 +83,7 @@
                 style="width: 100px; height: 100px"
               />
             </li>
-            <li>
+            <li :style="{ width: 500 + 'px' }">
               <p>
                 {{ detailInfo.skuName }}
               </p>
@@ -91,15 +92,15 @@
             <li>
               <h3>￥{{ detailInfo.orderPrice }}</h3>
             </li>
-            <li>X1{{ detailInfo.skuNum }}</li>
+            <li>X{{ detailInfo.skuNum }}</li>
             <li>有货</li>
           </ul>
         </div>
         <!-- 留言区 -->
         <div class="bbs">
-          <h5>买家留言：</h5>
+          <h5>&nbsp;买家留言：</h5>
           <textarea
-            placeholder="建议留言前先与商家沟通确认"
+            placeholder=" 建议留言前先与商家沟通确认"
             class="remarks-cont"
             v-model="userWant"
           ></textarea>
@@ -111,14 +112,16 @@
           <h5>使用优惠/抵用</h5>
         </div>
       </div>
+      <!-- 底部区域 -->
       <div class="money clearFix">
         <ul>
           <li>
             <b
-              ><i>{{ tradeInfo.totalNum }}</i
-              >件商品，总商品金额</b
+              >共计 <i>{{ tradeInfo.totalNum }}</i> 件商品</b
             >
-            <span>¥{{ tradeInfo.totalAmount }}</span>
+            <span
+              >总商品金额：<i>¥{{ tradeInfo.totalAmount }}</i></span
+            >
           </li>
           <li>
             <b>返现：</b>
@@ -134,15 +137,21 @@
         <div class="price">
           应付金额 : <span>¥{{ tradeInfo.totalAmount }}</span>
         </div>
-        <!-- Object.keys(this.defaultUserAddress).length === 0 -->
         <div
           class="receiveInfo"
           v-if="Object.keys(this.defaultUserAddress).length !== 0"
         >
-          寄送至:
-          <span>{{ defaultUserAddress.userAddress }}</span>
-          收货人：<span>{{ defaultUserAddress.consignee }}</span>
-          <span>{{ defaultUserAddress.phoneNum }}</span>
+          <ul>
+            <li>
+              寄送至: <span>{{ defaultUserAddress.userAddress }}</span>
+            </li>
+            <li>
+              收货人：<span>{{ defaultUserAddress.consignee }}</span>
+            </li>
+            <li>
+              联系电话：<span>{{ defaultUserAddress.phoneNum }}</span>
+            </li>
+          </ul>
         </div>
         <div class="receiveInfo" v-else>未选择收获地址信息</div>
       </div>
